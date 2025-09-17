@@ -1,0 +1,53 @@
+Structure: 
+-gui.py
+-image_to_text.py
+-text_to_speech.py
+
+Description of modules used: 
+
+1.tkinter- core python library for building GUI applications 
+root = tk.Tk()  # main window
+tk.Button(root, text="Run Model", command=run_model)  # button to run AI models
+
+
+2.ttk- module within python library- use Tk themed widgets to create interactive GUI 
+-combobox: dropdown list
+-styling
+ttk.Combobox(root, textvariable=input_type, values=["Image", "Text"])
+
+
+
+3.filedialog - lets user chose a file
+filepath = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.png")])
+
+
+4.messagebox- shows warnings/errors message  if no file selected or API fails 
+messagebox.showwarning("No Input", "Please select a file first.")
+
+
+5.PIL (pillow)- python imaging libary fork for handing images
+-opening, resizing, coverting images for tkinter 
+img = Image.open(filepath)
+img.thumbnail((250, 250))
+tk_img = ImageTk.PhotoImage(img)
+file_label.config(image=tk_img)
+
+
+6.transformers- hugging face libary to loads pre trained models
+-pipeline: high level API for AI tasks
+
+7. pygame- libary to play audio (also has other multimedia features) 
+
+7.tempfile- creates temporary files safely 
+
+8.OS- standard for file/path operations 
+
+Hugging Face Modules:
+
+-Transformers library: 
+
+-image_to_text.py
+-text_to_speech.py 
+
+
+
