@@ -1,4 +1,4 @@
--------------------------------------------------Planning document---------------------------------------------
+-------------------------------------------------Planning document--------------------------------------------- Descritpions of the modules--------------------
 
 Structure: 
 -gui.py
@@ -50,6 +50,7 @@ Hugging Face Modules:
 
 -image_to_text.py
 -text_to_speech.py 
+
 
 
 
