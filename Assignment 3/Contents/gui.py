@@ -211,6 +211,8 @@
 # # # image_label = tk.Label(image_frame, text="No image uploaded")
 # # # image_label.pack(expand=True)
 
+#V4--------------------------------------------------------------------------------------------------------------------------
+
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageTk
@@ -294,10 +296,10 @@ def handle_voice():
     if result.startswith("Error"):
         messagebox.showerror("Error", result)
 
-# GUI Setup-----------------
+# --- GUI Setup ----------------- V4 with description label-----------------------------------------------------------------
 root = tk.Tk()
 root.title("AI Image/Text Tool")
-root.geometry("1200x800")
+root.geometry("1200x900")  # a bit taller to fit description
 
 # Canvas with scrollbars
 canvas_frame = tk.Frame(root)
@@ -317,24 +319,43 @@ canvas.configure(yscrollcommand=v_scroll.set, xscrollcommand=h_scroll.set)
 control_frame = tk.Frame(root)
 control_frame.pack(pady=5)
 
-upload_btn = tk.Button(control_frame, text="Upload Image", command=choose_image)   # Upload button linked to handler
+upload_btn = tk.Button(control_frame, text="Upload Image", command=choose_image)
 upload_btn.grid(row=0, column=0, padx=5)
 
-mode_var = tk.StringVar(value="Image to Text")    # Dropdown for mode selection
+mode_var = tk.StringVar(value="Image to Text")
 mode_dropdown = ttk.Combobox(control_frame, textvariable=mode_var,
                              values=["Image to Text", "Text to Image"],
                              state="readonly", width=20)
 mode_dropdown.grid(row=0, column=1, padx=5)
 
-execute_btn = tk.Button(control_frame, text="Execute", command=handle_execute)  # Execute button- linked to handler
+execute_btn = tk.Button(control_frame, text="Execute", command=handle_execute)
 execute_btn.grid(row=0, column=2, padx=5)
 
-caption_var = tk.StringVar()  # Entry for caption/text
+caption_var = tk.StringVar()
 caption_entry = tk.Entry(control_frame, textvariable=caption_var, width=50)
 caption_entry.grid(row=1, column=0, columnspan=2, pady=5)
 
 audio_btn = tk.Button(control_frame, text="Play Voice", command=handle_voice, state="disabled")
 audio_btn.grid(row=1, column=2, pady=5)
+
+# Description label for mode explanation
+description_var = tk.StringVar()
+description_label = tk.Label(root, textvariable=description_var, wraplength=1150, justify="left", 
+                             bg="#f0f0f0", anchor="w", relief="sunken", bd=1, padx=5, pady=5)
+description_label.pack(fill="x", padx=10, pady=10)
+
+# Update description based on selected mode
+def update_description(*args):
+    mode = mode_var.get()
+    if mode == "Image to Text":
+        description_var.set("Image to Text: Upload an image and generate a brief textual description of it. "
+                            "Useful for understanding the content of images or for accessibility purposes.")
+    elif mode == "Text to Image":
+        description_var.set("Text to Image: Enter descriptive text to generate an image based on it. "
+                            "Useful for visualizing ideas or concepts from text.")
+
+mode_var.trace_add("write", update_description)
+update_description()  # initial description
 
 # Load logo naturally
 base_dir = os.path.dirname(__file__)
@@ -346,3 +367,5 @@ else:
     canvas.create_text(10,10, anchor="nw", text="No logo found")
 
 root.mainloop()
+
+
