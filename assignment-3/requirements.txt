@@ -1,4 +1,4 @@
-Pytorch CPU ONLY:
+# Pytorch CPU ONLY:
 accelerate==1.0.1
 attrs==25.3.0
 branca==0.8.1
@@ -56,7 +56,7 @@ urllib3==2.2.3
 xyzservices==2025.4.0
 zipp==3.20.2
 
-Pytorch Cuda GPU (faster image generation and better quailty)
+# Pytorch Cuda GPU (faster image generation and better quailty)
 accelerate==1.0.1
 attrs==25.3.0
 branca==0.8.1
@@ -115,4 +115,3 @@ tzdata==2025.2
 urllib3==2.2.3
 xyzservices==2025.4.0
 zipp==3.20.2
-

@@ -1,31 +1,22 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageTk
-import threading
 import os
-from image_to_text import generate_caption
+from image_to_text import Image2TextModel
+from text_to_image import Text2ImageModel
 from text_to_speech import text_to_voice
-from text_to_image import generate_image
+from utils import run_in_thread
 
-# ===============================
-# Decorator to run functions in threads
-# ===============================
-def run_in_thread(func):
-    """Decorator: runs the wrapped function in a background thread."""
-    def wrapper(*args, **kwargs):
-        threading.Thread(target=func, args=args, kwargs=kwargs, daemon=True).start()
-    return wrapper
 
 # ===============================
 # Main GUI Class
 # ===============================
-class AIImageTextApp:
-
-    def __init__(self, root):
+class AIImageTextApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
         """Initialize the GUI, variables, and layout."""
-        self.root = root
-        self.root.title("AI Image/Text Tool")
-        self.root.geometry("1200x900")  # Set window size
+        self.title("AI Image/Text Tool")
+        self.geometry("1200x900")  # Set window size
 
         # ===============================
         # Internal variables
@@ -40,6 +31,7 @@ class AIImageTextApp:
         self._build_canvas()             # Canvas + scrollbars
         self._build_controls()           # Buttons, entry, dropdown
         self._build_description()        # Mode description label
+        self._build_explaination()       # Add OOP explaination
 
         # ===============================
         # Load logo on startup
@@ -51,7 +43,7 @@ class AIImageTextApp:
     # ===============================
     def _build_canvas(self):
         """Create canvas frame, canvas, and scrollbars."""
-        self.canvas_frame = tk.Frame(self.root)
+        self.canvas_frame = tk.Frame(self)
         self.canvas_frame.pack(fill="both", expand=True)
 
         self.canvas = tk.Canvas(self.canvas_frame, bg="white")  # Canvas for images
@@ -62,7 +54,7 @@ class AIImageTextApp:
         self.v_scroll.pack(side="right", fill="y")
 
         # Horizontal scrollbar
-        self.h_scroll = tk.Scrollbar(self.root, orient="horizontal", command=self.canvas.xview)
+        self.h_scroll = tk.Scrollbar(self, orient="horizontal", command=self.canvas.xview)
         self.h_scroll.pack(side="bottom", fill="x")
 
         # Configure canvas scroll commands
@@ -76,7 +68,7 @@ class AIImageTextApp:
     # ===============================
     def _build_controls(self):
         """Create buttons, dropdown, text entry for prompt/caption."""
-        self.control_frame = tk.Frame(self.root)
+        self.control_frame = tk.Frame(self)
         self.control_frame.pack(pady=5)
 
         # Upload image button
@@ -112,7 +104,7 @@ class AIImageTextApp:
     def _build_description(self):
         """Label to show description of selected mode."""
         self.description_var = tk.StringVar()
-        self.description_label = tk.Label(self.root, textvariable=self.description_var, wraplength=1150,
+        self.description_label = tk.Label(self, textvariable=self.description_var, wraplength=1150,
                                           justify="left", bg="#f0f0f0", anchor="w", relief="sunken",
                                           bd=1, padx=5, pady=5)
         self.description_label.pack(fill="x", padx=10, pady=10)
@@ -121,7 +113,7 @@ class AIImageTextApp:
     # ===============================
     # Update description label
     # ===============================
-    def update_description(self, *args):
+    def update_description(self):
         """Update description text based on selected mode."""
         mode = self.mode_var.get()
         if mode == "Image to Text":
@@ -134,6 +126,18 @@ class AIImageTextApp:
                 "Text to Image: Enter descriptive text to generate an image based on it. "
                 "Useful for visualizing ideas or concepts from text."
             )
+
+    # ===============================
+    # Description label setup
+    # ===============================
+    def _build_explaination(self):
+        """Label to show explaination of OOP."""
+        self.explaination_var = tk.StringVar()
+        self.explaination_var.set("OOP allows us to group related data and fuctions together (encapsulation) so we can seperate concerns of operation. This allows to the code to be easier to read and navigate. Inheritance has allowed us to extend upon the Tk() class to build our gui.")
+        self.explaination_label = tk.Label(self, textvariable=self.explaination_var, wraplength=1150,
+                                          justify="left", bg="#f0f0f0", anchor="w", relief="sunken",
+                                          bd=1, padx=5, pady=5)
+        self.explaination_label.pack(fill="x", padx=10, pady=10)
 
     # ===============================
     # Load and display logo
@@ -214,7 +218,8 @@ class AIImageTextApp:
         self.execute_btn.config(state="disabled")
         self.upload_btn.config(state="disabled")
 
-        caption = generate_caption(self.loaded_image_path)
+        model = Image2TextModel()
+        caption = model.generate_caption(self.loaded_image_path)
         self.caption_var.set(caption)
         if not caption.startswith("Error"):
             self.audio_btn.config(state="normal")
@@ -237,7 +242,8 @@ class AIImageTextApp:
         self.upload_btn.config(state="disabled")
 
         try:
-            img_large = generate_image(text, width=1024, height=1024, steps=25)
+            model = Text2ImageModel()
+            img_large = model.generate_image(text, width=1024, height=1024, steps=25)
             self.display_image(img_large)
         except Exception as e:
             messagebox.showerror("Error", f"Image generation failed:\n{e}")
@@ -263,6 +269,5 @@ class AIImageTextApp:
 # Run the application
 # ===============================
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = AIImageTextApp(root)
-    root.mainloop()
+    app = AIImageTextApp()
+    app.mainloop()

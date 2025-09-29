@@ -42,7 +42,7 @@
 ## py -3.12 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 ##
 
 ####CUDA required foor gpu works otherwise use cpu#### ONLY supported on NVIDIA high powered devices#####
-##### python 3.12 required for CUDA ###### 
+##### python 3.12 required for CUDA ######
 
 ##Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
@@ -52,19 +52,37 @@ from diffusers import StableDiffusionPipeline
 import torch
 from PIL import Image
 
-# Determine device
-device = "cuda" if torch.cuda.is_available() else "cpu"
+class Text2ImageModel:
+    def __init__(self):
+        # Determine device
+        device = "cuda" if torch.cuda.is_available() else "cpu"
 
-# Load Stable Diffusion
-pipe = StableDiffusionPipeline.from_pretrained(
-    "runwayml/stable-diffusion-v1-5",
-    torch_dtype=torch.float16 if device == "cuda" else torch.float32  # use half precision only on GPU
-)
-pipe = pipe.to(device)  # move to GPU or CPU automatically
+        # Load Stable Diffusion
+        self.pipe = StableDiffusionPipeline.from_pretrained(
+            "runwayml/stable-diffusion-v1-5",
+            torch_dtype=torch.float16 if device == "cuda" else torch.float32  # use half precision only on GPU
+        ).to(device)  # move to GPU or CPU automatically
 
-def generate_image(prompt: str, width=512, height=512, steps=25) -> Image.Image:
-    if not prompt.strip():
-        raise ValueError("Prompt cannot be empty.")
+    def generate_image(self, prompt: str, width=512, height=512, steps=25) -> Image.Image:
+        if not prompt.strip():
+            raise ValueError("Prompt cannot be empty.")
 
-    result = pipe(prompt, width=width, height=height, num_inference_steps=steps)
-    return result.images[0]
+        result = self.pipe(prompt, width=width, height=height, num_inference_steps=steps)
+        return result.images[0]
+
+# # Determine device
+# device = "cuda" if torch.cuda.is_available() else "cpu"
+
+# # Load Stable Diffusion
+# pipe = StableDiffusionPipeline.from_pretrained(
+#     "runwayml/stable-diffusion-v1-5",
+#     torch_dtype=torch.float16 if device == "cuda" else torch.float32  # use half precision only on GPU
+# )
+# pipe = pipe.to(device)  # move to GPU or CPU automatically
+
+# def generate_image(prompt: str, width=512, height=512, steps=25) -> Image.Image:
+#     if not prompt.strip():
+#         raise ValueError("Prompt cannot be empty.")
+
+#     result = pipe(prompt, width=width, height=height, num_inference_steps=steps)
+#     return result.images[0]
