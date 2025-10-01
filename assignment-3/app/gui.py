@@ -153,7 +153,7 @@ class AIImageTextApp(tk.Tk):
             self.canvas.create_text(10, 10, anchor="nw", text="No logo found")
 
     # ===============================
-    # Display and redraw image
+    # Display and redraw the image
     # ===============================
     def display_image(self, pil_img):
         """Store references to PIL and Tkinter images, draw centered."""
@@ -271,3 +271,4 @@ class AIImageTextApp(tk.Tk):
 if __name__ == "__main__":
     app = AIImageTextApp()
     app.mainloop()
+
