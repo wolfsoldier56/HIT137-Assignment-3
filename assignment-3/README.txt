@@ -8,3 +8,4 @@ Welcome to Group 8's GUI. Please refer to the following instructions to run this
 3. Text to image runs in two different ways: slow and low quality (via CPU), and fast with more increased quality via CUDA GPU.
 4 To run it faster, you will be required to download Nvidia CUDA and install it. Otherwise, the program will naturally revert to CPU and run the program that way. 
 5. To run the program, you must run the GUI.py code from the app folder in VS Studio. 
+6. Photos you can use for Image to text and Photo evidence of Text to image will be found in media folder 
